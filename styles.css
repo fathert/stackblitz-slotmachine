@@ -9,25 +9,20 @@ body {
   background-color: white;
 }
 
+.flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
 .reel {
   min-height: 450px;
   max-width: 108px;
+  min-width: 108px;
   border: 3px solid black;
   border-radius: 16px;
-  position: relative;
   overflow: hidden;
   margin: 20px;
-}
-
-.symbol {
-  position: absolute;
-}
-
-.strip {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background-repeat: repeat-y;
 }
+

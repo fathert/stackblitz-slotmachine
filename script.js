@@ -2,6 +2,7 @@
 
 const symbols = [
   './symbols/banana.svg',
+  './symbols/orange.svg',
   './symbols/cherry.svg',
   './symbols/lemon.svg',
   './symbols/aubergine.svg',
@@ -10,40 +11,32 @@ const symbols = [
 ];
 
 //for (var i = 0; i < 1000; i++) {
-const spins = 30;
 const spinTime = 5;
-const symbolCount = 6;
+const symbolCount = symbols.length;
 const symbolPad = 4;
 const symbolHeight = 100;
 
 const reelHeight = 450;
-const stripLength = 624;
+const stripLength = symbolCount * (symbolHeight + symbolPad);
 const stripMargin = 0;
 
 const startSymbol = 0; //Math.floor((Math.floor(Math.random() * 6)));
 
-var startY = stripLength - (startSymbol * (symbolHeight + symbolPad)) + (symbolPad / 2);
-startY += -((symbolHeight + symbolPad) / 2);
-startY += (reelHeight / 2);
-var endY = (symbolHeight + symbolPad) * symbolCount * spins;
-endY += (symbolCount - startSymbol + 2) * (symbolHeight + symbolPad);
 
-endY = (279 + spins * stripLength);
-
-console.log(`Start: ${startY}, end: ${endY}`);
-
-const animateTime = spinTime * 1000;
 
 merge(symbols).then((imageStrip) => {
-  var strip = document.getElementById('strip');
+  var strip = document.getElementById('reel1');
   strip.style.backgroundImage = `url(${imageStrip.image})`;
-  const button = document.getElementById('button');
+  var strip = document.getElementById('reel2');
+  strip.style.backgroundImage = `url(${imageStrip.image})`;
+  var strip = document.getElementById('reel3');
+  strip.style.backgroundImage = `url(${imageStrip.image})`;
 
+  const button = document.getElementById('button');
   button.addEventListener('click', event => {
     console.log('button clicked');
     handleSpin();
   });
-  handleSpin();
 });
 
 function merge(symbols) {
@@ -69,6 +62,18 @@ function merge(symbols) {
             canvas.width,
             symbolHeight
           );
+
+          ctx.fillStyle = 'black';
+          ctx.font = "50px Arial";
+          const text = `${i}`;
+          const metrics = ctx.measureText(text);
+          const textHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+          ctx.strokeText(
+            text,
+            (canvas.width - metrics.width) / 2,
+            start + ((symbolHeight + textHeight) / 2)
+          );
+
           return start += (symbolHeight + symbolPad);
         }, 0);
         var image = canvas.toDataURL('image/jpeg');
@@ -97,8 +102,27 @@ function loadImage(path) {
 }
 
 function handleSpin() {
-  var strip = document.getElementById('strip');
+  doSpin('reel1', 25, Math.floor(Math.random() * symbolCount));
+  doSpin('reel2', 35, Math.floor(Math.random() * symbolCount));
+  doSpin('reel3', 45, Math.floor(Math.random() * symbolCount));
+}
 
+function doSpin(containerId, spins, selectSymbol) {
+  var strip = document.getElementById(containerId);
+
+  var startY = stripLength - (startSymbol * (symbolHeight + symbolPad)) + (symbolPad / 2);
+  startY += -((symbolHeight + symbolPad) / 2);
+  startY += (reelHeight / 2);
+
+  var endY = stripLength - (selectSymbol * (symbolHeight + symbolPad)) + (symbolPad / 2);
+  endY += -((symbolHeight + symbolPad) / 2);
+  endY += (reelHeight / 2);
+
+  endY += spins * stripLength;
+
+  console.log(`Start: ${startY}, end: ${endY}`);
+
+  const animateTime = spinTime * 1000;
   const animation = strip.animate(
     [
       { backgroundPositionY: `${startY}px`, easing: 'ease' },
@@ -116,7 +140,7 @@ function handleSpin() {
     a.commitStyles();
     a.cancel();
   });
-  
+
   //strip.style.backgroundPositionY = `${endY}px`;
   //animation.commitStyles();
 }
