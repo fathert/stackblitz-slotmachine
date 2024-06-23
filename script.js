@@ -34,27 +34,16 @@ console.log(`Start: ${startY}, end: ${endY}`);
 
 const animateTime = spinTime * 1000;
 
-
 merge(symbols).then((imageStrip) => {
   var strip = document.getElementById('strip');
   strip.style.backgroundImage = `url(${imageStrip.image})`;
+  const button = document.getElementById('button');
 
-  console.info(`${imageStrip} Strip ${imageStrip.width} x ${imageStrip.height}`);
-
-  const animation = strip.animate(
-    [
-      { backgroundPositionY: `${startY}px`, easing: 'ease' },
-      { backgroundPositionY: `${endY}px`, easing: 'ease' },
-    ],
-    {
-      duration: animateTime,
-      iterations: 1,
-    }
-  );
-  //animation.pause();
-
-  animation.onfinish = () => strip.style.backgroundPositionY = `${endY}px`;
-
+  button.addEventListener('click', event => {
+    console.log('button clicked');
+    handleSpin();
+  });
+  handleSpin();
 });
 
 function merge(symbols) {
@@ -73,7 +62,6 @@ function merge(symbols) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         images.reduce((start, image, i) => {
-          console.log(i, start);
           ctx.drawImage(
             image,
             stripMargin,
@@ -108,3 +96,27 @@ function loadImage(path) {
   });
 }
 
+function handleSpin() {
+  var strip = document.getElementById('strip');
+
+  const animation = strip.animate(
+    [
+      { backgroundPositionY: `${startY}px`, easing: 'ease' },
+      { backgroundPositionY: `${endY}px`, easing: 'ease' },
+    ],
+    {
+      fill: 'forwards',  // In conjunction with commitStyles() keeps the final animation state
+      duration: animateTime,
+      iterations: 1,
+    }
+  );
+  //animation.pause();
+
+  animation.finished.then((a) => {
+    a.commitStyles();
+    a.cancel();
+  });
+  
+  //strip.style.backgroundPositionY = `${endY}px`;
+  //animation.commitStyles();
+}
