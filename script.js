@@ -7,7 +7,12 @@ const symbols = [
   './symbols/lemon.svg',
   './symbols/aubergine.svg',
   './symbols/bell.svg',
-  './symbols/avocado.svg'
+  './symbols/ice.svg',
+  './symbols/avocado.svg',
+  './symbols/touch.svg',
+  './symbols/lick.svg',
+  './symbols/peach.svg',
+  './symbols/kiss.svg'
 ];
 
 //for (var i = 0; i < 1000; i++) {
@@ -88,7 +93,7 @@ function merge(symbols) {
 };
 
 function loadImage(path) {
-  console.log(`Loading: ${path}`);
+  // console.log(`Loading: ${path}`);
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.src = path;
