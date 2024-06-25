@@ -68,7 +68,7 @@ function merge(symbols) {
             symbolHeight
           );
 
-          ctx.fillStyle = 'black';
+          ctx.strokeStyle = 'lightgray';
           ctx.font = "50px Arial";
           const text = `${i}`;
           const metrics = ctx.measureText(text);
