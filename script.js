@@ -1,5 +1,4 @@
 
-
 const symbols = [
   './symbols/banana.svg',
   './symbols/orange.svg',
@@ -28,23 +27,32 @@ const stripMargin = 0;
 const startSymbol = 0; //Math.floor((Math.floor(Math.random() * 6)));
 
 
-
-merge(symbols).then((imageStrip) => {
-  var strip = document.getElementById('reel1');
-  strip.style.backgroundImage = `url(${imageStrip.image})`;
-  var strip = document.getElementById('reel2');
-  strip.style.backgroundImage = `url(${imageStrip.image})`;
-  var strip = document.getElementById('reel3');
-  strip.style.backgroundImage = `url(${imageStrip.image})`;
-
+createStrip(symbols).then((imageStrip) => {
+  const reels = [];
+  reels[0] = createReal('reel1', imageStrip);
+  reels[1] = createReal('reel2', imageStrip);
+  reels[2] = createReal('reel3', imageStrip);
+  console.log(reels);
   const button = document.getElementById('button');
   button.addEventListener('click', event => {
-    console.log('button clicked');
-    handleSpin();
+    handleSpin(reels);
   });
 });
 
-function merge(symbols) {
+function createReal(reelContainerId, strip) {
+  var container = document.getElementById(reelContainerId);
+  container.style.backgroundImage = `url(${strip.image})`;
+  
+  return {
+    container,
+    strip
+  }
+  
+}
+
+
+function createStrip(symbols) {
+  const symbolCount = symbols.length;
   return new Promise((resolve, reject) => {
     Promise.all(symbols.map((symbol) => loadImage(symbol)))
       .then((images) => {
@@ -86,6 +94,7 @@ function merge(symbols) {
         resolve({
           height: canvas.height,
           width: canvas.width,
+          symbolCount,
           image
         });
       });
@@ -106,10 +115,14 @@ function loadImage(path) {
   });
 }
 
-function handleSpin() {
-  doSpin('reel1', 25, Math.floor(Math.random() * symbolCount));
-  doSpin('reel2', 35, Math.floor(Math.random() * symbolCount));
-  doSpin('reel3', 45, Math.floor(Math.random() * symbolCount));
+function handleSpin(reels) {
+  const spins = 25;
+
+  for (var i = 0; i < reels.length; i++) {
+    const symbolCount = reels[i].strip.symbolCount;
+    console.log('S', symbolCount);
+    doSpin(`reel${i+1}`, spins + (i * 10), Math.floor(Math.random() * symbolCount));
+  }
 }
 
 function doSpin(containerId, spins, selectSymbol) {
@@ -149,3 +162,6 @@ function doSpin(containerId, spins, selectSymbol) {
   //strip.style.backgroundPositionY = `${endY}px`;
   //animation.commitStyles();
 }
+
+
+
