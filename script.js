@@ -1,4 +1,6 @@
 
+import { Reel } from "./reel.js"
+
 const symbols = [
   './symbols/banana.svg',
   './symbols/orange.svg',
@@ -26,10 +28,9 @@ const stripMargin = 0;
 
 const startSymbol = 0; //Math.floor((Math.floor(Math.random() * 6)));
 
-
 createStrip(symbols).then((imageStrip) => {
   const reels = [];
-  reels[0] = createReal('reel1', imageStrip);
+  reels[0] = new Reel('reel1', imageStrip);
   reels[1] = createReal('reel2', imageStrip);
   reels[2] = createReal('reel3', imageStrip);
   console.log(reels);
